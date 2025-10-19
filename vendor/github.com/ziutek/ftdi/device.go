@@ -4,10 +4,6 @@ package ftdi
 #include <stdlib.h>
 #include <ftdi.h>
 #include <libusb.h>
-
-#cgo pkg-config: libftdi1 libusb-1.0
-//#cgo CFLAGS: -I/usr/local/include/libftdi1 -I/usr/include/libusb-1.0
-//#cgo LDFLAGS: /usr/local/lib/libftdi1.a /usr/lib/x86_64-linux-gnu/libusb-1.0.a -ludev -pthread
 */
 import "C"
 
@@ -23,20 +19,20 @@ import (
 // The handle should come from libusb_wrap_sys_device() or similar.
 //
 // Example with gousb:
-//   goUsbDev, _ := ctx.OpenDeviceWithFileDescriptor(fd)
-//   ftdiDev := ftdi.OpenFromHandle(goUsbDev, ftdi.ChannelA)
 //
+//	goUsbDev, _ := ctx.OpenDeviceWithFileDescriptor(fd)
+//	ftdiDev := ftdi.OpenFromHandle(goUsbDev, ftdi.ChannelA)
 func OpenFromHandle(usbHandle unsafe.Pointer, c Channel) (*Device, error) {
-    d := &Device{}
-    d.ctx = C.ftdi_new()
-    if d.ctx == nil {
-        return nil, &Error{code: -1, str: "ftdi_new failed"}
-    }
+	d := &Device{}
+	d.ctx = C.ftdi_new()
+	if d.ctx == nil {
+		return nil, &Error{code: -1, str: "ftdi_new failed"}
+	}
 
-    C.ftdi_set_usbdev(d.ctx, (*C.libusb_device_handle)(usbHandle))
-    C.ftdi_set_interface(d.ctx, C.enum_ftdi_interface(c))
+	C.ftdi_set_usbdev(d.ctx, (*C.libusb_device_handle)(usbHandle))
+	C.ftdi_set_interface(d.ctx, C.enum_ftdi_interface(c))
 
-    return d, nil
+	return d, nil
 }
 
 func makeError(ctx *C.struct_ftdi_context, code C.int) error {
