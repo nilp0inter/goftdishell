@@ -1,0 +1,6 @@
+# github.com/google/gousb v1.1.3
+## explicit; go 1.16
+github.com/google/gousb
+# github.com/ziutek/ftdi v0.0.1
+## explicit; go 1.13
+github.com/ziutek/ftdi
